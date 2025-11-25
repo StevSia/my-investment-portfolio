@@ -28,12 +28,14 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        # CHANGED: 'npm ci' fails without a lockfile. 'npm install' generates one and proceeds.
+        run: npm install
 
       - name: Build
         run: npm run build
         env:
           # This pulls the key from your GitHub Repository Secrets
+          # If this secret is missing, the app will still build, but AI features will be disabled.
           API_KEY: ${{ secrets.API_KEY }}
 
       - name: Upload artifact

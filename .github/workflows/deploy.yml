@@ -25,17 +25,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: 'npm'
-
+          # Cache removed because package-lock.json might not exist yet
+          
       - name: Install dependencies
-        # CHANGED: 'npm ci' fails without a lockfile. 'npm install' generates one and proceeds.
+        # Uses 'npm install' which generates the lockfile if missing
         run: npm install
 
       - name: Build
         run: npm run build
         env:
           # This pulls the key from your GitHub Repository Secrets
-          # If this secret is missing, the app will still build, but AI features will be disabled.
           API_KEY: ${{ secrets.API_KEY }}
 
       - name: Upload artifact

@@ -90,17 +90,17 @@ const Trade: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-slate-900 mb-8 text-center">Record Transaction</h1>
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-8 text-center">Record Transaction</h1>
         
         {success && (
-            <div className="mb-6 bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-center font-medium shadow-sm animate-in fade-in slide-in-from-top-2">
+            <div className="mb-6 bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded-xl text-center font-medium shadow-sm animate-in fade-in slide-in-from-top-2">
                 Transaction Successfully Recorded!
             </div>
         )}
 
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors duration-300">
             {/* Type Selector */}
-            <div className="flex border-b border-gray-200">
+            <div className="flex border-b border-gray-200 dark:border-slate-700">
                 {[TransactionType.BUY, TransactionType.SELL, TransactionType.DEPOSIT].map((t) => (
                     <button
                         key={t}
@@ -108,8 +108,10 @@ const Trade: React.FC = () => {
                         onClick={() => setType(t)}
                         className={`flex-1 py-4 text-sm font-bold uppercase tracking-wider transition-colors ${
                             type === t 
-                                ? (t === TransactionType.BUY || t === TransactionType.DEPOSIT ? 'bg-blue-50 text-blue-600 border-b-2 border-blue-600' : 'bg-red-50 text-red-600 border-b-2 border-red-600') 
-                                : 'bg-white text-gray-400 hover:bg-gray-50'
+                                ? (t === TransactionType.BUY || t === TransactionType.DEPOSIT 
+                                    ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border-b-2 border-blue-600' 
+                                    : 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border-b-2 border-red-600') 
+                                : 'bg-white dark:bg-slate-800 text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-700'
                         }`}
                     >
                         {t}
@@ -120,12 +122,12 @@ const Trade: React.FC = () => {
             <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 {/* Account Selection */}
                 <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Portfolio Account</label>
+                    <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Portfolio Account</label>
                     <div className="relative">
                         <select 
                             value={accountId} 
                             onChange={e => setAccountId(e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none font-medium cursor-pointer"
+                            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none font-medium cursor-pointer"
                         >
                             {accounts.map(a => <option key={a.id} value={a.id}>{a.name} — Available: ${a.cashBalance.toLocaleString()}</option>)}
                         </select>
@@ -138,7 +140,7 @@ const Trade: React.FC = () => {
                 {!isCashTx && (
                     <>
                         <div>
-                             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Stock Symbol</label>
+                             <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Stock Symbol</label>
                              <div className="relative">
                                 <input 
                                     type="text" 
@@ -146,14 +148,14 @@ const Trade: React.FC = () => {
                                     onChange={e => setSymbol(e.target.value.toUpperCase())}
                                     onBlur={handleSymbolBlur}
                                     placeholder="e.g. MSFT"
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-11 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-bold tracking-wide uppercase placeholder:normal-case placeholder:font-sans"
+                                    className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 pl-11 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono font-bold tracking-wide uppercase placeholder:normal-case placeholder:font-sans"
                                 />
                                 <div className="absolute left-4 top-3.5 text-gray-400">
                                     {loadingGemini ? <Loader2 className="animate-spin" size={20}/> : <Search size={20}/>}
                                 </div>
                              </div>
                              {name && (
-                                <div className="mt-2 text-sm text-blue-600 font-medium bg-blue-50 inline-block px-3 py-1 rounded-full">
+                                <div className="mt-2 text-sm text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/30 inline-block px-3 py-1 rounded-full">
                                     {name}
                                 </div>
                             )}
@@ -161,7 +163,7 @@ const Trade: React.FC = () => {
 
                         <div className="grid grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Price per Share</label>
+                                <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Price per Share</label>
                                 <div className="relative">
                                     <span className="absolute left-4 top-3 text-gray-400 font-bold">$</span>
                                     <input 
@@ -169,19 +171,19 @@ const Trade: React.FC = () => {
                                         step="0.01"
                                         value={price}
                                         onChange={e => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                                        className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-8 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                                        className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 pl-8 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                                         placeholder="0.00"
                                     />
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Quantity</label>
+                                <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Quantity</label>
                                 <input 
                                     type="number" 
                                     step="any"
                                     value={quantity}
                                     onChange={e => setQuantity(e.target.value === '' ? '' : Number(e.target.value))}
-                                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+                                    className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
                                     placeholder="0"
                                 />
                             </div>
@@ -191,7 +193,7 @@ const Trade: React.FC = () => {
 
                 {isCashTx && (
                      <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Amount</label>
+                        <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Amount</label>
                         <div className="relative">
                             <span className="absolute left-4 top-3 text-gray-400 font-bold">$</span>
                             <input 
@@ -199,7 +201,7 @@ const Trade: React.FC = () => {
                                 step="0.01"
                                 value={price}
                                 onChange={e => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-8 text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-xl font-medium"
+                                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 pl-8 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-xl font-medium"
                                 placeholder="0.00"
                             />
                         </div>
@@ -208,16 +210,16 @@ const Trade: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-6">
                      <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Date</label>
+                        <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Date</label>
                         <input 
                             type="date"
                             value={date}
                             onChange={e => setDate(e.target.value)}
-                            className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                      </div>
                      <div>
-                        <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Transaction Fee</label>
+                        <label className="block text-xs font-bold text-gray-500 dark:text-slate-400 uppercase tracking-wide mb-2">Transaction Fee</label>
                         <div className="relative">
                             <span className="absolute left-4 top-3 text-gray-400 font-bold text-sm">$</span>
                             <input 
@@ -225,7 +227,7 @@ const Trade: React.FC = () => {
                                 step="0.01"
                                 value={fee}
                                 onChange={e => setFee(Number(e.target.value))}
-                                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-8 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl px-4 py-3 pl-8 text-sm text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                         </div>
                      </div>
@@ -236,8 +238,8 @@ const Trade: React.FC = () => {
                         type="submit"
                         className={`w-full py-4 rounded-xl text-white font-bold text-lg shadow-lg transition-all active:scale-[0.98] ${
                             type === TransactionType.SELL || type === TransactionType.WITHDRAW 
-                            ? 'bg-red-500 hover:bg-red-600 shadow-red-200' 
-                            : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200'
+                            ? 'bg-red-500 hover:bg-red-600 shadow-red-200 dark:shadow-none' 
+                            : 'bg-blue-600 hover:bg-blue-700 shadow-blue-200 dark:shadow-none'
                         }`}
                     >
                         {type === TransactionType.DEPOSIT ? 'Deposit Funds' : type === TransactionType.WITHDRAW ? 'Withdraw Funds' : `${type} Stock`}

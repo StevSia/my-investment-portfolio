@@ -9,7 +9,15 @@ const Dividends: React.FC = () => {
 
   const allAssets = accounts.flatMap(a => getAccountAssets(a.id));
 
+  // Demo Mode check
+  const isDemoMode = !process.env.API_KEY;
+
   const handleEstimate = async (symbol: string, accountId: string, quantity: number) => {
+    if (isDemoMode) {
+        alert("This feature requires an API Key.");
+        return;
+    }
+
     setLoadingMap(prev => ({...prev, [symbol]: true}));
     
     const info = await estimateDividends(symbol);
@@ -41,50 +49,50 @@ const Dividends: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold text-slate-900 mb-8">Dividend Tracker</h1>
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-8">Dividend Tracker</h1>
       
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-10">
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-center text-center">
-             <div className="mb-4 bg-green-50 p-3 rounded-full">
-                <CheckCircle2 size={32} className="text-green-600" />
+          <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center text-center transition-colors">
+             <div className="mb-4 bg-green-50 dark:bg-green-900/30 p-3 rounded-full">
+                <CheckCircle2 size={32} className="text-green-600 dark:text-green-400" />
              </div>
-             <p className="text-sm text-gray-400 font-bold uppercase tracking-wider mb-2">Total Received</p>
-             <p className="text-4xl font-extrabold text-slate-900">${totalReceived.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+             <p className="text-sm text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider mb-2">Total Received</p>
+             <p className="text-4xl font-extrabold text-slate-900 dark:text-white">${totalReceived.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
           </div>
-          <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 flex flex-col items-center justify-center text-center">
-             <div className="mb-4 bg-blue-50 p-3 rounded-full">
-                <CalendarDays size={32} className="text-blue-600" />
+          <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center text-center transition-colors">
+             <div className="mb-4 bg-blue-50 dark:bg-blue-900/30 p-3 rounded-full">
+                <CalendarDays size={32} className="text-blue-600 dark:text-blue-400" />
              </div>
-             <p className="text-sm text-gray-400 font-bold uppercase tracking-wider mb-2">Projected (Next 12mo)</p>
-             <p className="text-4xl font-extrabold text-slate-900">${totalProjected.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+             <p className="text-sm text-gray-400 dark:text-slate-400 font-bold uppercase tracking-wider mb-2">Projected (Next 12mo)</p>
+             <p className="text-4xl font-extrabold text-slate-900 dark:text-white">${totalProjected.toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
           </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main List */}
           <div className="lg:col-span-2 space-y-6">
-              <h3 className="font-bold text-xl text-slate-800">Payment Schedule</h3>
+              <h3 className="font-bold text-xl text-slate-800 dark:text-white">Payment Schedule</h3>
               
               {dividends.length === 0 ? (
-                  <div className="bg-white rounded-2xl p-10 border border-gray-200 text-center">
-                      <p className="text-gray-400 mb-2">No dividends scheduled yet.</p>
-                      <p className="text-sm text-gray-500">Use the generator on the right to estimate payments from your holdings.</p>
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-10 border border-gray-200 dark:border-slate-700 text-center transition-colors">
+                      <p className="text-gray-400 dark:text-slate-500 mb-2">No dividends scheduled yet.</p>
+                      <p className="text-sm text-gray-500 dark:text-slate-400">Use the generator on the right to estimate payments from your holdings.</p>
                   </div>
               ) : (
-                  <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden divide-y divide-gray-100">
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden divide-y divide-gray-100 dark:divide-slate-700 transition-colors">
                       {[...dividends].sort((a,b) => new Date(a.payDate).getTime() - new Date(b.payDate).getTime()).map(div => (
-                          <div key={div.id} className="p-5 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                          <div key={div.id} className="p-5 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                               <div className="flex items-center space-x-4">
-                                  <button onClick={() => toggleDividend(div.id)} className="text-gray-300 hover:text-blue-500 transition-colors focus:outline-none">
-                                      {div.isReceived ? <CheckCircle2 className="text-green-500" size={28} /> : <Circle size={28} />}
+                                  <button onClick={() => toggleDividend(div.id)} className="text-gray-300 dark:text-slate-600 hover:text-blue-500 dark:hover:text-blue-400 transition-colors focus:outline-none">
+                                      {div.isReceived ? <CheckCircle2 className="text-green-500 dark:text-green-400" size={28} /> : <Circle size={28} />}
                                   </button>
                                   <div>
-                                      <p className={`font-bold text-lg ${div.isReceived ? 'text-gray-400 line-through' : 'text-slate-800'}`}>{div.symbol}</p>
-                                      <p className="text-sm text-gray-500">{new Date(div.payDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                                      <p className={`font-bold text-lg ${div.isReceived ? 'text-gray-400 dark:text-slate-500 line-through' : 'text-slate-800 dark:text-white'}`}>{div.symbol}</p>
+                                      <p className="text-sm text-gray-500 dark:text-slate-400">{new Date(div.payDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                                   </div>
                               </div>
-                              <div className={`font-bold text-xl ${div.isReceived ? 'text-green-500' : 'text-slate-800'}`}>
+                              <div className={`font-bold text-xl ${div.isReceived ? 'text-green-500 dark:text-green-400' : 'text-slate-800 dark:text-white'}`}>
                                   ${div.amount.toFixed(2)}
                               </div>
                           </div>
@@ -95,12 +103,12 @@ const Dividends: React.FC = () => {
 
           {/* Sidebar Generator */}
           <div>
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100 sticky top-24">
-                  <h3 className="font-bold text-blue-900 mb-2 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800 rounded-2xl p-6 border border-blue-100 dark:border-slate-700 sticky top-24 transition-colors">
+                  <h3 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-2">
                       <RefreshCw size={18}/>
                       Update Forecast
                   </h3>
-                  <p className="text-sm text-blue-700/80 mb-6 leading-relaxed">
+                  <p className="text-sm text-blue-700/80 dark:text-slate-400 mb-6 leading-relaxed">
                       Tap your holdings below to ask Gemini AI to estimate upcoming dividend payments and add them to your schedule.
                   </p>
                   
@@ -112,7 +120,7 @@ const Dividends: React.FC = () => {
                                 key={asset.symbol}
                                 onClick={() => accId && handleEstimate(asset.symbol, accId, asset.quantity)}
                                 disabled={loadingMap[asset.symbol]}
-                                className="bg-white hover:bg-blue-600 hover:text-white border border-blue-200 text-blue-700 px-4 py-2 rounded-lg text-sm font-bold shadow-sm flex items-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="bg-white dark:bg-slate-700 hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white border border-blue-200 dark:border-slate-600 text-blue-700 dark:text-slate-200 px-4 py-2 rounded-lg text-sm font-bold shadow-sm flex items-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                               >
                                 <span>{asset.symbol}</span>
                                 {loadingMap[asset.symbol] ? <RefreshCw className="animate-spin" size={14} /> : null}
